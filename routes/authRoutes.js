@@ -23,9 +23,16 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   const email = req.body.email
   const password = req.body.password
-  const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = '${password}'`
+
   try {
+    const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = '${password}'`
+    console.log(queryString)
+    console.log(email, password)
     const { rows } = await db.query(queryString)
+    if (rows.length === 0) {
+      res.status(401).json({ error: 'Incorrect email or password' })
+      return
+    }
     res.json(rows)
   } catch (err) {
     res.json({ error: err.message })
