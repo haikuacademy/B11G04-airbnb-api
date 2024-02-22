@@ -40,6 +40,9 @@ router.post('/login', async (req, res) => {
   )
 
   if (isPasswordValid) {
+    res.send('Your login is correct')
+  } else {
+    throw new Error('Your login is incorrect')
   }
   try {
     const { rows } = await db.query(queryString)
