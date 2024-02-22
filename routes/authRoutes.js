@@ -14,9 +14,9 @@ router.post('/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     // Hashing password
     const hashedPassword = await bcrypt.hash(password, salt)
-    const queryString = ` INSERT INTO users ( first_name, last_name, email, password, profile_photo)
+    const queryString = ` INSERT INTO users ( first_name, last_name, email, password, profile_photo) 
     VALUES ('${first_name}', '${last_name}', '${email}', '${hashedPassword}', '${profile_photo}' )
-    RETURNING * `
+  RETURNING * `
     console.log(queryString)
     const { rows } = await db.query(queryString)
     res.json(rows)
@@ -31,10 +31,8 @@ router.post('/login', async (req, res) => {
     const { rows } = await db.query(
       `SELECT * FROM users WHERE email = '${req.body.email}'`
     )
-    console.log(rows)
 
     let user = rows[0]
-    console.log(user)
 
     const isPasswordValid = await bcrypt.compare(
       req.body.password,
@@ -53,7 +51,8 @@ router.post('/login', async (req, res) => {
 
 // logout
 router.get('/logout', (req, res) => {
-  res.send('Hello from Logout')
+  res.clearCookie('jwt')
+  res.send('You are logged out')
 })
 
 export default router
