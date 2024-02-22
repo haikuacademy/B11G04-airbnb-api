@@ -34,6 +34,13 @@ router.post('/login', async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt)
   // query for logging in
   const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = ''${hashedPassword}''`
+  const isPasswordValid = await bcrypt.compare(
+    req.body.password,
+    rows[0].password
+  )
+
+  if (isPasswordValid) {
+  }
   try {
     const { rows } = await db.query(queryString)
     res.json(rows)
