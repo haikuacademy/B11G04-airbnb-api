@@ -16,7 +16,7 @@ router.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt)
     const queryString = ` INSERT INTO users ( first_name, last_name, email, password, profile_photo)
     VALUES ('${first_name}', '${last_name}', '${email}', '${hashedPassword}', '${profile_photo}' )
-  RETURNING * `
+    RETURNING * `
     console.log(queryString)
     const { rows } = await db.query(queryString)
     res.json(rows)
@@ -26,27 +26,26 @@ router.post('/signup', async (req, res) => {
 })
 //login coding
 router.post('/login', async (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
-  // create salt
-  const salt = await bcrypt.genSalt(10)
-  // hash password
-  const hashedPassword = await bcrypt.hash(password, salt)
-  // query for logging in
-  const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = ''${hashedPassword}''`
-  const isPasswordValid = await bcrypt.compare(
-    req.body.password,
-    rows[0].password
-  )
-
-  if (isPasswordValid) {
-    res.send('Your login is correct')
-  } else {
-    throw new Error('Your login is incorrect')
-  }
   try {
-    const { rows } = await db.query(queryString)
-    res.json(rows)
+    // query for logging in
+    const { rows } = await db.query(
+      `SELECT * FROM users WHERE email = '${req.body.email}'`
+    )
+    console.log(rows)
+
+    let user = rows[0]
+    console.log(user)
+
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    )
+
+    if (isPasswordValid) {
+      res.send('Your login is correct')
+    } else {
+      throw new Error('Your login is incorrect')
+    }
   } catch (err) {
     res.json({ error: err.message })
   }
