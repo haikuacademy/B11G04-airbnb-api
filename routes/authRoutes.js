@@ -2,7 +2,7 @@ import { Router } from 'express'
 import db from '../db.js'
 import bcrypt from 'bcrypt'
 const router = Router()
-
+// sign up
 router.post('/signup', async (req, res) => {
   try {
     const first_name = req.body.first_name
@@ -24,11 +24,15 @@ router.post('/signup', async (req, res) => {
     res.json({ error: err.message })
   }
 })
-
+//login coding
 router.post('/login', async (req, res) => {
   const email = req.body.email
   const password = req.body.password
-  const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = '${password}'`
+  // create salt
+  const salt = await bcrypt.genSalt(10)
+
+  // query for logging in
+  const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = ''${hashedPassword}''`
   try {
     const { rows } = await db.query(queryString)
     res.json(rows)
