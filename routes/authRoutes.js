@@ -30,7 +30,8 @@ router.post('/login', async (req, res) => {
   const password = req.body.password
   // create salt
   const salt = await bcrypt.genSalt(10)
-
+  // hash password
+  const hashedPassword = await bcrypt.hash(password, salt)
   // query for logging in
   const queryString = `SELECT * FROM users WHERE users.email = '${email}' AND users.password = ''${hashedPassword}''`
   try {
