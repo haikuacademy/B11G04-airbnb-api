@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
     res.json({ error: err.message })
   }
 })
-
+// logout
 router.get('/logout', (req, res) => {
   res.send('Hello from Logout')
 })
