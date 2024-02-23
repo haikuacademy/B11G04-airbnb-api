@@ -30,7 +30,7 @@ router.post('/signup', async (req, res) => {
 //login coding
 router.post('/login', async (req, res) => {
   // searching for login
-  console.log(req.body)
+
   try {
     const { rows } = await db.query(
       `SELECT * FROM users WHERE email = '${req.body.email}'`
@@ -43,7 +43,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
       throw new Error('Email not valid')
     }
-    console.log(user)
+    //console.log(user)
     //compares password
     const isPasswordValid = await bcrypt.compare(
       req.body.password,
@@ -51,17 +51,16 @@ router.post('/login', async (req, res) => {
     )
     // console.log(isPasswordValid)
     if (isPasswordValid) {
-      res.send('Your login is correct')
+      const payload = {
+        email: user.email,
+        user_id: user.user_id
+      }
+      const token = jwt.sign(payload, secret)
+      res.cookie('jwt', token)
+      res.send(token)
     } else {
       throw new Error('Your login is incorrect')
     }
-    const payload = {
-      user_id: req.body.user_id,
-      email: req.body.email
-    }
-    const token = jwt.sign(payload, secret)
-    const decoded = jwt.verify(token, secret)
-    res.cookie('jwt, token')
   } catch (err) {
     res.json({ error: err.message })
   }
