@@ -33,6 +33,10 @@ router.post('/login', async (req, res) => {
   // console.log(rows[0])
   const users = rows[0]
   // console.log(users)
+
+  //compares password
+  const isPasswordValid = await bcrypt.compare(req.body.password, user.password)
+  console.log(isPasswordValid)
 })
 // logout
 router.get('/logout', (req, res) => {
