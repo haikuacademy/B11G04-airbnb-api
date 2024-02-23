@@ -30,7 +30,9 @@ router.post('/login', async (req, res) => {
   const { rows } = await db.query(
     `SELECT * FROM users WHERE email ='${req.body.email}'`
   )
-  console.log(rows[0])
+  // console.log(rows[0])
+  const users = rows[0]
+  // console.log(users)
 })
 // logout
 router.get('/logout', (req, res) => {
