@@ -1,6 +1,9 @@
 import { Router } from 'express'
 import db from '../db.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { secret } from '../secrets.js'
+
 const router = Router()
 // sign up
 router.post('/signup', async (req, res) => {
@@ -27,14 +30,20 @@ router.post('/signup', async (req, res) => {
 //login coding
 router.post('/login', async (req, res) => {
   // searching for login
+  console.log(req.body)
   try {
     const { rows } = await db.query(
-      `SELECT * FROM users WHERE email ='${req.body.email}'`
+      `SELECT * FROM users WHERE email = '${req.body.email}'`
     )
     // console.log(rows[0])
-    let user = rows[0]
-    // console.log(user)
 
+    let user = rows[0]
+    console.log(rows)
+
+    if (!user) {
+      throw new Error('Email not valid')
+    }
+    console.log(user)
     //compares password
     const isPasswordValid = await bcrypt.compare(
       req.body.password,
