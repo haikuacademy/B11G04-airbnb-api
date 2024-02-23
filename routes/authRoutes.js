@@ -27,17 +27,30 @@ router.post('/signup', async (req, res) => {
 //login coding
 router.post('/login', async (req, res) => {
   // searching for login
-  const { rows } = await db.query(
-    `SELECT * FROM users WHERE email ='${req.body.email}'`
-  )
-  // console.log(rows[0])
-  const users = rows[0]
-  // console.log(users)
+  try {
+    const { rows } = await db.query(
+      `SELECT * FROM users WHERE email ='${req.body.email}'`
+    )
+    // console.log(rows[0])
+    let user = rows[0]
+    // console.log(user)
 
-  //compares password
-  const isPasswordValid = await bcrypt.compare(req.body.password, user.password)
-  // console.log(isPasswordValid)
+    //compares password
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    )
+    // console.log(isPasswordValid)
+    if (isPasswordValid) {
+      res.send('Your login is correct')
+    } else {
+      throw new Error('Your login is incorrect')
+    }
+  } catch (err) {
+    res.json({ error: err.message })
+  }
 })
+
 // logout
 router.get('/logout', (req, res) => {
   res.clearCookie('jwt')
