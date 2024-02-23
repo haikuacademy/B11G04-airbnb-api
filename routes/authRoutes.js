@@ -55,11 +55,17 @@ router.post('/login', async (req, res) => {
     } else {
       throw new Error('Your login is incorrect')
     }
+    const payload = {
+      user_id: req.body.user_id,
+      email: req.body.email
+    }
+    const token = jwt.sign(payload, secret)
+    const decoded = jwt.verify(token, secret)
+    res.cookie('jwt, token')
   } catch (err) {
     res.json({ error: err.message })
   }
 })
-
 // logout
 router.get('/logout', (req, res) => {
   res.clearCookie('jwt')
