@@ -25,7 +25,10 @@ router.post('/signup', async (req, res) => {
   }
 })
 //login coding
-router.post('/login', async (req, res) => {})
+router.post('/login', async (req, res) => {
+  // searching for login
+  const { rows } = await db.query(`SELECT * FROM users `)
+})
 // logout
 router.get('/logout', (req, res) => {
   res.clearCookie('jwt')
