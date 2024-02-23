@@ -25,30 +25,7 @@ router.post('/signup', async (req, res) => {
   }
 })
 //login coding
-router.post('/login', async (req, res) => {
-  try {
-    // query for logging in
-    const { rows } = await db.query(
-      `SELECT * FROM users WHERE email = '${req.body.email}'`
-    )
-
-    let user = rows[0]
-
-    const isPasswordValid = await bcrypt.compare(
-      req.body.password,
-      user.password
-    )
-
-    if (isPasswordValid) {
-      res.send('Your login is correct')
-    } else {
-      throw new Error('Your login is incorrect')
-    }
-  } catch (err) {
-    res.json({ error: err.message })
-  }
-})
-
+router.post('/login', async (req, res) => {})
 // logout
 router.get('/logout', (req, res) => {
   res.clearCookie('jwt')
